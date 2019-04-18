@@ -87,11 +87,11 @@ function validateCVC() {
       if (cardCVC.validity.valueMissing) {
             cardCVC.setCustomValidity("Oi bruv, you got your credit caard loisence?")
       } else if ((creditCard === "amex") && (/^\d{4}$/.test(cardCVC.value) === false)) {
-
-      } else if (condition) {
-
+            cardCVC.setCustomValidity('Enter a 4-digit CVC number');
+      } else if ((creditCard === "amex") && (/^\d{3}$/.test(cardCVC.value) === false)) {
+            cardCVC.setCustomValidity('Enter a 3-digit CVC number');
       } else {
-
+            cardCVC.setCustomValidity('');
       }
 }
 
@@ -117,7 +117,7 @@ function validateNumber() {
       var cardNumber = document.getElementById("cardNumber");
       if (cardNumber.validity.valueMissing) {
             cardNumber.setCustomValidity("dude, broooo, enter your card number maaaaan.")
-      } else if (cardNumber.validity.patternMismatch) {
+      } else if (luhn(cardNumber.value) === false) {
             cardNumber.setCustomValidity("your card number's wrong, dummy.")
       } else {
             cardNumber.setCustomValidity("");
@@ -140,4 +140,27 @@ function validateName() {
       } else {
             cardName.setCustomValidity("");
       }
+};
+
+function sumDigits(numStr){
+      var digitTotal = 0;
+      for (var i = 0; i < numStr.length; i++) {
+            digitTotal += parseInt(numStr.charAt(i));
+      }
+      return digitTotal;
+}
+
+function luhn(idNum) {
+      var string1 = "";
+      var string2 = "";
+      //retrieve the odd numbered digits
+      for (var i = idNum.length - 1; i >= 0; i -= 2) {
+            string += idNum.charAt(i);
+      }
+      //retrieve the even numbered digits
+      for (var i = idNum.length - 2; i >= 0; i-= 2) {
+            string2 += 2*idNum.charAt(i);
+      }
+      //rethern whether the sum of the digits is divisible by ten
+      return sumDigits(string1 + string2) % 10 === 0;
 }
